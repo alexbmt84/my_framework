@@ -1,25 +1,45 @@
 <?php
 
-    spl_autoload_register(function ($class) {
+    function getAllDirectories($baseDir): array {
 
-        $directories = [
-        '/application/',
-        '/models/',
-        '/views/',
-        '/controllers/'
-        ];
+        $directories = [];
 
-        foreach ($directories as $directory) {
+        foreach (scandir($baseDir) as $file) {
 
-            $filePath = $_SERVER['DOCUMENT_ROOT'] . $directory . $class . '.class.php';
+            if ($file === '.' || $file === '..') continue;
 
-            if (file_exists($filePath)) {
+            if (is_dir($baseDir . DIRECTORY_SEPARATOR . $file)) {
+                $directories[] = $file;
+            }
 
-                require_once $filePath;
-                break;
+        }
+
+        return $directories;
+
+    }
+
+    $directories = getAllDirectories($_SERVER['DOCUMENT_ROOT'] . BASE_URI);
+
+    function recursive_autoload($pattern = ROOT. DIRECTORY_SEPARATOR .'*') : void {
+
+        foreach (glob($pattern, GLOB_MARK) as $item) {
+
+            if (str_ends_with($item, DIRECTORY_SEPARATOR)) {
+
+                recursive_autoload("$item*");
+
+            } else if(str_ends_with($item, '.class.php')) {
+
+                require_once $item;
 
             }
 
         }
+
+    }
+
+    spl_autoload_register(function () use ($directories) {
+
+        recursive_autoload();
 
     });
