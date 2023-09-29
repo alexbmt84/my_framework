@@ -1,67 +1,55 @@
 <?php
 
 namespace MyFramework;
+use PDO;
+use PDOException;
 
 class Core
 {
 
-//    static protected $_routing = [];
-//    static private $_render;
-//
-//    private function routing() {
-//
-//        self::$_routing = [
-//            'controller' => 'default',
-//            'action' => 'default'
-//        ];
-//
-//    }
-
     static protected $_routing = [];
     static private $_render;
+    static protected $_pdo;
+
+    public function __construct() {
+
+        $user = "root";
+        $password = "";
+        $database = "my_framework";
+        $dsn = "mysql:dbname=" . $database . ";host=localhost";
+
+        self::$_pdo = new \PDO($dsn, $user, $password);
+        self::$_pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+
+    }
 
     private function routing() {
 
         $uri = str_replace(BASE_URI, '', $_SERVER['REQUEST_URI']);
-
         $parts = array_filter(explode('/', $uri));
 
-        var_dump("URL : " . $uri);
+        $stmt = self::$_pdo->prepare("SELECT real_path FROM routing WHERE url = ?");
+        $stmt->execute([$parts[3] ?? '']);
 
-        $controller = 'Default';
-        $action = 'default';
+        $real_path = $stmt->fetchColumn();
 
-        var_dump("\$parts[1] : " . $parts[1],
-            "Path : " . dirname(__DIR__) . '\controllers\\' . $controller . 'Controller.class.php');
+        if ($real_path) {
+            $real_parts = explode('/', $real_path);
 
-        var_dump(isset($parts[1]) && file_exists(dirname(__DIR__) . '\controllers\\' . $controller . 'Controller.class.php'));
+            $controller = ucfirst($real_parts[0]) ?? 'default';
+            $action = $real_parts[1] ?? 'default';
 
-        if(isset($parts[1]) && file_exists(dirname(__DIR__) . '\controllers\\' . $controller . 'Controller.class.php')) {
+        } else {
 
-            var_dump($parts);
-
-            self::$_routing['controller'] = $parts[1];
-
-            var_dump(self::$_routing['controller']);
+            $controller = ucfirst($parts[3] ?? 'Default');
+            $action = $parts[2] ?? 'default';
 
         }
-
-        if(!empty($parts[2])) {
-
-            var_dump("\$parts[2] : " . $parts[2]);
-
-           self::$_routing['action'] = $parts[2];
-
-           var_dump(self::$_routing['action']);
-
-        }
-
 
         self::$_routing = [
             'controller' => $controller,
             'action' => $action
         ];
-
     }
 
     protected function render($params = []) {

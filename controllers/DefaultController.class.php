@@ -1,27 +1,41 @@
 <?php
 
-    namespace MyFramework;
+namespace MyFramework;
 
-    class DefaultController extends DefaultModel {
+class DefaultController extends DefaultModel {
 
-        public function defaultAction() {
 
-            $this->render(['prenom' => $this->getLogin()]);
+    protected $model;
 
-        }
+    public function defaultAction()
+    {
+        $model = new DefaultModel();
+        $data = $model->getData();
 
-        public function ConnexionAction() {
-
-            $params = [];
-
-            if (isset($_POST['login']) && !empty($_POST['login'])) {
-                $params['login'] = $_POST['login'];
-            }
-
-            $params['url'] = $_SERVER['REQUEST_URI'];
-
-            Core::render($params);
-
-        }
+        $this->render(['prenom' => $this->getLogin()]);
+        // Envoyer les données à la vue pour les afficher
 
     }
+
+    public function connexionAction()
+    {
+        $url = $_SERVER['REQUEST_URI'];
+        $login = isset($_POST['login']) ? $_POST['login'] : null;
+
+        Core::render([
+            'url' => $url,
+            'login' => $login
+        ]);
+
+    }
+
+    public function someAction() {
+
+        $results = DefaultModel::someQuery();
+
+        //Traitement des résultats et affichage ...
+
+    }
+
+}
+
