@@ -5,14 +5,61 @@ namespace MyFramework;
 class Core
 {
 
+//    static protected $_routing = [];
+//    static private $_render;
+//
+//    private function routing() {
+//
+//        self::$_routing = [
+//            'controller' => 'default',
+//            'action' => 'default'
+//        ];
+//
+//    }
+
     static protected $_routing = [];
     static private $_render;
 
     private function routing() {
 
+        $uri = str_replace(BASE_URI, '', $_SERVER['REQUEST_URI']);
+
+        $parts = array_filter(explode('/', $uri));
+
+        var_dump("URL : " . $uri);
+
+        $controller = 'Default';
+        $action = 'default';
+
+        var_dump("\$parts[1] : " . $parts[1],
+            "Path : " . dirname(__DIR__) . '\controllers\\' . $controller . 'Controller.class.php');
+
+        var_dump(isset($parts[1]) && file_exists(dirname(__DIR__) . '\controllers\\' . $controller . 'Controller.class.php'));
+
+        if(isset($parts[1]) && file_exists(dirname(__DIR__) . '\controllers\\' . $controller . 'Controller.class.php')) {
+
+            var_dump($parts);
+
+            self::$_routing['controller'] = $parts[1];
+
+            var_dump(self::$_routing['controller']);
+
+        }
+
+        if(!empty($parts[2])) {
+
+            var_dump("\$parts[2] : " . $parts[2]);
+
+           self::$_routing['action'] = $parts[2];
+
+           var_dump(self::$_routing['action']);
+
+        }
+
+
         self::$_routing = [
-            'controller' => 'default',
-            'action' => 'default'
+            'controller' => $controller,
+            'action' => $action
         ];
 
     }
