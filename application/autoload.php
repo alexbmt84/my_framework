@@ -13,8 +13,10 @@ function getAllDirectories($baseDir): array {
 
         // Vérifier si l'élément actuel est un répertoire
         if (is_dir($baseDir . DIRECTORY_SEPARATOR . $file)) {
+
             // Ajouter le nom du répertoire au tableau
             $directories[] = $file;
+
         }
 
     }

@@ -8,13 +8,7 @@ class DefaultController extends DefaultModel {
 
     // Méthode pour gérer l'action par défaut
     public function defaultAction() {
-
-        // Création d'une nouvelle instance de DefaultModel
-        $model = new DefaultModel();
-
-        // Récupération des données depuis le modèle
-        $data = $model->getData();
-
+        
         // Appel de la méthode render pour préparer la vue
         // En passant le prénom récupéré via la méthode getLogin() en tant que donnée
         $this->render(['prenom' => $this->getLogin()]);
