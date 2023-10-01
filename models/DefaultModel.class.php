@@ -1,22 +1,28 @@
 <?php
 
-    namespace MyFramework;
+// Définition de l'espace de noms de la classe
+namespace MyFramework;
 
-    class DefaultModel extends Core {
+// Définition de la classe DefaultModel qui hérite de Core
+class DefaultModel extends Core {
 
-        protected static $_pdo;
+    // Méthode pour obtenir des données de la table 'routing'
+    public function getData() {
 
-        public function getData() {
+        // Exécution d'une requête SQL pour sélectionner tous les enregistrements de la table 'routing'
+        $stmt = Core::$_pdo->query("SELECT * FROM routing");
 
-            $stmt = Core::$_pdo->query("SELECT * FROM routing");
-            return $stmt->fetchAll(\PDO::FETCH_ASSOC);
-
-        }
-
-        public function getLogin() {
-
-            return "Alexis";
-
-        }
+        // Retour des résultats sous forme d'un tableau associatif
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
     }
+
+    // Méthode pour obtenir un prénom (ici simplement d'une valeur codée en dur)
+    public function getLogin() {
+
+        // Retour du prénom "Alexis"
+        return "Alexis";
+
+    }
+
+}
