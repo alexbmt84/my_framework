@@ -1,6 +1,5 @@
 <?php
 
-// Définition de l'espace de noms de la classe
 namespace MyFramework;
 
 // Définition de la classe DefaultModel qui hérite de Core

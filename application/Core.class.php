@@ -3,11 +3,9 @@
 // Déclaration du namespace dans lequel se trouve la classe
 namespace MyFramework;
 
-// Utilisation des espaces de noms pour PDO et PDOException
 use PDO;
 use PDOException;
 
-// Définition de la classe principale "Core"
 class Core
 {
     // Définition des propriétés statiques pour le routage, le rendu et la connexion à la base de données
@@ -59,6 +57,7 @@ class Core
 
             // Si aucun vrai chemin n'est trouvé, utilisation des segments d'URI comme contrôleur et action
             $controller = ucfirst($parts[3] ?? 'Default');
+
             $action = $parts[2] ?? 'default';
 
         }
@@ -71,35 +70,52 @@ class Core
 
     }
 
-    // Fonction pour gérer le rendu de la vue
-    protected function render($params = []) {
+    protected function render($params = [], $isPartial = false) {
 
-        // Construction du chemin du fichier de la vue
-        $f = implode(DIRECTORY_SEPARATOR, [dirname(__DIR__), 'views', self::$_routing['controller'], self::$_routing['action']]) . '.html';
+        // Récupère l'url complète
+        $viewPath = implode(DIRECTORY_SEPARATOR, [dirname(__DIR__), 'views', self::$_routing['controller'], self::$_routing['action']]) . '.html';
 
-        if (file_exists($f)) {
+        // Si le fichier que nous recherchons existe...
+        if (file_exists($viewPath)) {
 
-            // Si le fichier existe, lire son contenu
-            $c = file_get_contents($f);
+            // On récupère son contenu...
+            $viewContent = file_get_contents($viewPath);
 
-            // Remplacer les balises avec les valeurs passées en paramètre
             foreach ($params as $k => $v) {
 
-                $c = preg_replace("/\{\{\s*$k\s*\}\}/", $v, $c);
+                $viewContent = preg_replace("/\{\{\s*$k\s*\}\}/", $v, $viewContent);
 
             }
 
-            // Stocker le contenu traité pour le rendu
-            self::$_render = $c;
+            if ($isPartial) {
+
+                self::$_render = $viewContent;
+
+            } else {
+
+                $layoutPath = dirname(__DIR__) . '/views/layout.html';
+
+                if (file_exists($layoutPath)) {
+
+                    $layoutContent = file_get_contents($layoutPath);
+                    self::$_render = str_replace('{{ content }}', $viewContent, $layoutContent);
+
+                }
+
+            }
 
         } else {
 
-            // Si le fichier n'existe pas, afficher un message d'erreur
             self::$_render = "Impossible de trouver la vue" . PHP_EOL;
 
         }
 
     }
+
+    protected function renderPartial($params = []) {
+        $this->render($params, true);
+    }
+
 
     // Fonction principale pour exécuter l'application
     public function run() {
