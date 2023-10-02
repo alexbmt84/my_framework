@@ -2,13 +2,35 @@
 
 namespace MyFramework;
 
-// Définition de la classe DefaultModel qui hérite de Core
 class DefaultModel extends Core {
 
-    // Méthode pour obtenir un prénom (ici simplement d'une valeur codée en dur)
+    public function checkLogin($login, $password) {
+
+        try {
+
+            $stmt = self::$_pdo->prepare("SELECT password FROM users WHERE username = ?");
+            $stmt->execute([$login]);
+
+            $hashedPassword = $stmt->fetchColumn();
+
+            if ($hashedPassword && password_verify($password, $hashedPassword)) {
+
+                return true;
+            }
+
+            return false;
+
+        } catch (PDOException $e) {
+
+            die('Erreur d\'authentification: ' . $e->getMessage());
+
+        }
+
+    }
+
     public function getLogin() {
 
-        // Retour du prénom "Alexis"
+        // Retour du prénom "Alexis" en dur...
         return "Alexis";
 
     }

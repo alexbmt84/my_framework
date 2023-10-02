@@ -2,7 +2,6 @@
 
 namespace MyFramework;
 
-// Définition de la classe DefaultController qui hérite de DefaultModel
 class DefaultController extends DefaultModel {
 
     // Méthode pour gérer l'action par défaut
@@ -17,19 +16,60 @@ class DefaultController extends DefaultModel {
     // Méthode pour gérer l'action de connexion
     public function connexionAction() {
 
-        // Récupération de l'URL actuelle
         $url = $_SERVER['REQUEST_URI'];
 
-        // Récupération du login depuis le formulaire de connexion, s'il est défini
-        $login = isset($_POST['login']) ? $_POST['login'] : null;
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-        // Appel de la méthode render de la classe Core pour préparer la vue
-        // En passant l'URL et le login en tant que données
-        Core::render([
-            'url' => $url,
-            'login' => $login
-        ]);
+            $login = $_POST['username'] ?? null;
+            $password = $_POST['password'] ?? null;
+
+            if ($login && $password && $this->checkLogin($login, $password)) {
+
+                $_SESSION['auth'] = true; // L'utilisateur est authentifié
+                $_SESSION['login'] = $login;
+
+                header('Location: ' . BASE_URI . '/home');
+
+                exit();
+
+            } else {
+
+                $errorMessage = "Identifiants incorrects!";
+
+                Core::render([
+                    'url' => $url,
+                    'error' => $errorMessage
+                ]);
+
+            }
+
+        } else {
+
+            Core::render(['url' => $url]);
+
+        }
 
     }
+
+    public function homeAction() {
+        $username = $_SESSION['login'];
+        $this->render(['username' => $username]);
+    }
+
+    public function logoutAction() {
+
+        session_destroy();
+
+        header('Location: ' . BASE_URI . '/connexion');
+        exit();
+    }
+
+    public function registerAction() {
+
+        $this->render();
+
+    }
+
+
 
 }
