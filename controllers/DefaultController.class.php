@@ -20,13 +20,13 @@ class DefaultController extends DefaultModel {
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-            $login = $_POST['username'] ?? null;
+            $username = $_POST['username'] ?? null;
             $password = $_POST['password'] ?? null;
 
-            if ($login && $password && $this->checkLogin($login, $password)) {
+            if ($username && $password && $this->checkLogin($username, $password)) {
 
                 $_SESSION['auth'] = true; // L'utilisateur est authentifié
-                $_SESSION['login'] = $login;
+                $_SESSION['username'] = $username;
 
                 header('Location: ' . BASE_URI . '/home');
 
@@ -52,7 +52,7 @@ class DefaultController extends DefaultModel {
     }
 
     public function homeAction() {
-        $username = $_SESSION['login'];
+        $username = $_SESSION['username'];
         $this->render(['username' => $username]);
     }
 
@@ -89,7 +89,7 @@ class DefaultController extends DefaultModel {
                         $newUser->creerCompte();
 
                          $_SESSION['auth'] = true;
-                         $_SESSION['login'] = $username;
+                         $_SESSION['username'] = $username;
 
                          header('Location: ' . BASE_URI . '/home');
 

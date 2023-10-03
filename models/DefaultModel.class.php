@@ -6,12 +6,12 @@ use PDOException;
 
 class DefaultModel extends Core {
 
-    public function checkLogin($login, $password) {
+    public function checkLogin($username, $password) {
 
         try {
 
             $stmt = self::$_pdo->prepare("SELECT password FROM users WHERE username = ?");
-            $stmt->execute([$login]);
+            $stmt->execute([$username]);
 
             $hashedPassword = $stmt->fetchColumn();
 
