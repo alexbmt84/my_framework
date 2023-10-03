@@ -66,10 +66,53 @@ class DefaultController extends DefaultModel {
 
     public function registerAction() {
 
-        $this->render();
+        $url = $_SERVER['REQUEST_URI'];
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+             if (isset($_POST["username"]) && $_POST["username"] != "") {
+
+                 if (isset($_POST["email"]) && $_POST["email"] != "") {
+
+                     if (isset($_POST["password"]) && $_POST["password"] != "" && strlen($_POST["password"]) > 1) {
+
+                        $username = $_POST['username'] ?? null;
+                        $email = $_POST['email'] ?? null;
+                        $password = $_POST['password'] ?? null;
+
+                        $newUser = new User();
+
+                        $newUser->username = $username;
+                        $newUser->email = $email;
+                        $newUser->password = password_hash($password, PASSWORD_DEFAULT);
+
+                        $newUser->creerCompte();
+
+                         $_SESSION['auth'] = true;
+                         $_SESSION['login'] = $username;
+
+                         header('Location: ' . BASE_URI . '/home');
+
+                         exit();
+
+                     } else {
+                        return "You must set a valid password.";
+                     }
+
+                 } else {
+                     return "You must enter a valid email.";
+                 }
+
+             } else {
+                return "You must choose a valid username.";
+             }
+
+        }
+
+        Core::render([
+            'url' => $url,
+        ]);
 
     }
-
-
 
 }

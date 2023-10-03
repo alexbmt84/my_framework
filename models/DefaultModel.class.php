@@ -2,6 +2,8 @@
 
 namespace MyFramework;
 
+use PDOException;
+
 class DefaultModel extends Core {
 
     public function checkLogin($login, $password) {
