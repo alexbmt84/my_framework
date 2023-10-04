@@ -58,9 +58,9 @@ class Core
         } else {
 
             // Si aucun vrai chemin n'est trouvé, utilisation des segments d'URI comme contrôleur et action
-            $controller = ucfirst($parts[2] ?? 'default');
+            $controller = ucfirst($parts[0] ?? 'default');
 
-            $action = $parts[3] ?? 'default';
+            $action = $parts[1] ?? 'default';
 
         }
 
