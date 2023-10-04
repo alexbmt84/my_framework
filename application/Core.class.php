@@ -33,14 +33,14 @@ class Core
     private function routing() {
 
         // Extraction de l'URI demandée
-        $uri = str_replace(BASE_URI, '', $_SERVER['REQUEST_URI']);
+        $uri = str_replace(str_replace('\\', '/', BASE_URI), '', $_SERVER['REQUEST_URI']);
 
         // Division de l'URI en segments
-        $parts = array_filter(explode('/', $uri));
+        $parts = [...array_filter(explode('/', $uri))];
 
         // Requête SQL pour obtenir le vrai chemin basé sur l'URL
         $stmt = self::$_pdo->prepare("SELECT real_path FROM routing WHERE url = ?");
-        $stmt->execute([$parts[2] ?? '']);
+        $stmt->execute([$parts[0] ?? '']);
 
         // Récupération du vrai chemin de la base de données
         $real_path = $stmt->fetchColumn();
