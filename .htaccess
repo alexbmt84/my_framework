@@ -1,9 +1,9 @@
 DirectorySlash Off
 RewriteEngine On
 Options -ExecCGI -Includes -IncludesNOEXEC -Indexes -MultiViews
-RewriteBase /my_framework/
+RewriteBase /
 RewriteCond %{REQUEST_FILENAME} !-f [OR]
-RewriteCond %{REQUEST_URI} !^/my_framework/(static/.+|index\.php|robots\.txt)$
+RewriteCond %{REQUEST_URI} !^/(static/.+|index\.php|robots\.txt)$
 RewriteRule ^ index.php [QSA,L]
 # Header set X-Robots-Tag "none"
 # Header set Cache-Control "no-cache, no-store"
