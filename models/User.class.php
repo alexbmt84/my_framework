@@ -68,7 +68,9 @@
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
             if (!$result) {
+
                 return null;
+                
             }
 
             return $result;
