@@ -11,7 +11,6 @@
         public string $username;
         public string $email;
         public string $password;
-
         public function __construct() {
 
             $this->id = 0;
@@ -21,6 +20,7 @@
 
         }
 
+        // Avant
         public function creerCompte() {
 
             $username = $this-> username;
@@ -42,6 +42,36 @@
                 return false;
 
             }
+
+        }
+
+        // Après
+        public function create() {
+
+            $db = new Database('localhost', 'root', '', 'my_framework');
+            $sql = "INSERT INTO users (username, email, password) VALUES (?, ?, ?)";
+
+            $params = [$this->username, $this->email, $this->password];
+            $stmt = $db->query($sql, $params);
+
+            return $stmt->rowCount();
+
+        }
+
+        public static function find($id) {
+
+            $db = new Database('localhost', 'root', '', 'my_framework');
+            $sql = "SELECT * FROM users WHERE id = ?";
+            $params = [$id];
+
+            $stmt = $db->query($sql, $params);
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if (!$result) {
+                return null;
+            }
+
+            return $result;
 
         }
 

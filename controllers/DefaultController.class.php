@@ -28,7 +28,7 @@ class DefaultController extends DefaultModel {
                 $_SESSION['auth'] = true; // L'utilisateur est authentifié
                 $_SESSION['username'] = $username;
 
-                header('Location: ' . BASE_URI . '/home');
+                header('Location: ' . '/home');
 
                 exit();
 
@@ -60,7 +60,7 @@ class DefaultController extends DefaultModel {
 
         session_destroy();
 
-        header('Location: ' . BASE_URI . '/connexion');
+        header('Location: ' . '/connexion');
         exit();
     }
 
@@ -86,12 +86,12 @@ class DefaultController extends DefaultModel {
                         $newUser->email = $email;
                         $newUser->password = password_hash($password, PASSWORD_DEFAULT);
 
-                        $newUser->creerCompte();
+                        $newUser->create();
 
                          $_SESSION['auth'] = true;
                          $_SESSION['username'] = $username;
 
-                         header('Location: ' . BASE_URI . '/home');
+                         header('Location: ' . '/home');
 
                          exit();
 

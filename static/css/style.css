@@ -45,8 +45,8 @@ li {
 }
 
 .menuText {
-    font-weight: bolder;
-    font-size: 20px;
+    font-weight: bold;
+    font-size: 18px;
     font-family: Arial, sans-serif;
     color: #212121;
     padding: 10px 30px 10px 0;
@@ -54,7 +54,7 @@ li {
 }
 
 .menuText:hover {
-    color: #212121;
+    color: #808080;
     -moz-transform: scale(1.1);
     -webkit-transform: scale(1.1);
     transform: scale(1.1);

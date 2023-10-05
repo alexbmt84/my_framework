@@ -74,6 +74,8 @@ class Core
 
     protected function render($params = [], $isPartial = false) {
 
+        $params['isAuthenticated'] = isset($_SESSION['auth']) && $_SESSION['auth'];
+
         // Récupère l'url complète
         $viewPath = implode(DIRECTORY_SEPARATOR, [dirname(__DIR__), 'views', self::$_routing['controller'], self::$_routing['action']]) . '.html';
 
@@ -117,7 +119,6 @@ class Core
     protected function renderPartial($params = []) {
         $this->render($params, true);
     }
-
 
     // Fonction principale pour exécuter l'application
     public function run() {
